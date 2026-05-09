@@ -7,6 +7,9 @@ tiles = list(range(32)) * 2
 state = {'mark': None}
 hide = [True] * 64
 
+taps = 0
+tap_writer = Turtle(visible = False)
+
 def square(x, y):
     "Draw white square with black outline at (x, y)."
     up()
@@ -29,15 +32,36 @@ def xy(count):
 
 def tap(x, y):
     "Update mark and hidden tiles based on tap."
+    global taps
+    taps += 1
+    tap_writer.undo()
+    tap_writer.write(f'Taps: {taps}', font=('Arial', 14, 'normal'))
+ 
     spot = index(x, y)
     mark = state['mark']
-
+ 
     if mark is None or mark == spot or tiles[mark] != tiles[spot]:
         state['mark'] = spot
     else:
         hide[spot] = False
         hide[mark] = False
         state['mark'] = None
+
+    if not any(hide):
+        draw_win()
+
+def draw_win():
+    "Display a win message when all tiles are uncovered."
+    onscreenclick(None)  
+    win_writer = Turtle(visible=False)
+    win_writer.goto(0, 0)
+    win_writer.color('green')
+    win_writer.write(
+        f'You won in {taps} taps!',
+        align='center',
+        font=('Arial', 24, 'bold'),
+    )
+    update()
 
 def draw():
     "Draw image and tiles."
@@ -68,6 +92,9 @@ setup(420, 420, 370, 0)
 addshape(car)
 hideturtle()
 tracer(False)
+tap_writer.goto(140, 185)
+tap_writer.color('black')
+tap_writer.write('Taps: 0', font=('Arial', 14, 'normal'))
 onscreenclick(tap)
 draw()
 done()

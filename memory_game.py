@@ -47,6 +47,22 @@ def tap(x, y):
         hide[mark] = False
         state['mark'] = None
 
+    if not any(hide):
+        draw_win()
+
+def draw_win():
+    "Display a win message when all tiles are uncovered."
+    onscreenclick(None)  
+    win_writer = Turtle(visible=False)
+    win_writer.goto(0, 0)
+    win_writer.color('green')
+    win_writer.write(
+        f'You won in {taps} taps!',
+        align='center',
+        font=('Arial', 24, 'bold'),
+    )
+    update()
+
 def draw():
     "Draw image and tiles."
     clear()
